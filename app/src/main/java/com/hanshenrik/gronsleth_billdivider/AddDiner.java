@@ -7,7 +7,9 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +20,8 @@ import java.util.List;
 public class AddDiner extends ActionBarActivity {
 
     private List<String> diners;
-    private EditText addDinerNameInput;
+    private EditText dinerNameInput;
+    private ListView dinersListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +29,18 @@ public class AddDiner extends ActionBarActivity {
         setContentView(R.layout.activity_add_diner);
 
         this.diners = new ArrayList<>();
-        addDinerNameInput = (EditText) findViewById(R.id.add_diner_name_input);
+        this.dinerNameInput = (EditText) findViewById(R.id.diner_name_input);
+        this.dinersListView = (ListView) findViewById(R.id.diner_names);
 
-        addDinerNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, diners);
+        dinersListView.setAdapter(adapter);
+
+        dinerNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addDiner(addDinerNameInput.getText().toString());
-                    addDinerNameInput.setText("");
+                    addDiner(dinerNameInput.getText().toString());
+                    dinerNameInput.setText("");
                 }
                 // make keyboard hide when clicking 'Done' by returning false
                 return false;
