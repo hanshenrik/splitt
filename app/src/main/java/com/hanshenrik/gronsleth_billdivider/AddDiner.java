@@ -1,9 +1,15 @@
 package com.hanshenrik.gronsleth_billdivider;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +18,28 @@ import java.util.List;
 public class AddDiner extends ActionBarActivity {
 
     private List<String> diners;
-    private List<String> itemsPurchased;
+    private EditText addDinerNameInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_diner);
 
-        this.diners = new ArrayList<String>();
-        this.itemsPurchased = new ArrayList<String>();
-    }
+        this.diners = new ArrayList<>();
+        addDinerNameInput = (EditText) findViewById(R.id.add_diner_name_input);
 
+        addDinerNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    addDiner(addDinerNameInput.getText().toString());
+                    addDinerNameInput.setText("");
+                }
+                // make keyboard hide when clicking 'Done' by returning false
+                return false;
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,5 +61,16 @@ public class AddDiner extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addDiner(String diner) {
+        diners.add(diner);
+        successToast("'" + diner + "' added to list of diners.");
+    }
+
+    private void successToast(CharSequence message) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast.makeText(context, message, duration).show();
     }
 }

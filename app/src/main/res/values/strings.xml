@@ -3,4 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="add_diner_name_placeholder">put diner name here…</string>
+    <string name="add_diner_button">add diner</string>
 </resources>
