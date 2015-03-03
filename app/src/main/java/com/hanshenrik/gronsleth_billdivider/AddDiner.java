@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddDiner extends ActionBarActivity {
 
@@ -23,6 +24,8 @@ public class AddDiner extends ActionBarActivity {
     private EditText dinerNameInput;
     private ListView dinersListView;
     public final static String EXTRA_DINER_BILL_TITLE = "com.hanshenrik.gronsleth_billdivider.DINER_BILL_TITLE";
+    public final static String EXTRA_ITEMS = "com.hanshenrik.gronsleth_billdivider.ITEMS";
+    private HashMap<String, double[]> items;
 //    private final static int DINER_BILL_REQUEST = 1;
 //
 //    @Override
@@ -46,14 +49,24 @@ public class AddDiner extends ActionBarActivity {
         this.dinerNameInput = (EditText) findViewById(R.id.diner_name_input);
         this.dinersListView = (ListView) findViewById(R.id.diner_names);
 
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, diners);
-        dinersListView.setAdapter(adapter);
+
+        // dummy data. maybe keep in AddItems class and fetched from there?
+        this.items = new HashMap<>();
+        //        item                   total price  shared between, do 1.0/this when presenting/calculating
+        items.put("beer", new double[] { 3,           1 });
+        items.put("wine btl", new double[]{11, 3});
+        items.put("nachos", new double[]{12, 3});
+        items.put("steak", new double[] {15, 1});
+
+        final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, diners);
+        dinersListView.setAdapter(dinersListAdapter);
 
         dinerNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     addDiner(dinerNameInput.getText().toString());
+                    dinersListAdapter.notifyDataSetChanged();
                     dinerNameInput.setText("");
                 }
                 // hide keyboard when clicking 'Done' by returning false
@@ -63,14 +76,23 @@ public class AddDiner extends ActionBarActivity {
 
         dinersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 Intent intent = new Intent(getApplicationContext(), DinerBill.class);
-                intent.putExtra(EXTRA_DINER_BILL_TITLE, parent.getItemAtPosition(position).toString());
-                // intent.putStringArrayListExtra("Diners", diners);
-                //startActivityForResult(intent, DINER_BILL_REQUEST);
+                intent.putExtra(EXTRA_DINER_BILL_TITLE, parent.getItemAtPosition(pos).toString());
+                intent.putExtra(EXTRA_ITEMS, items);
                 startActivity(intent);
 
-                //displayToast(parent.getItemAtPosition(position).toString());
+                //startActivityForResult(intent, DINER_BILL_REQUEST);
+                //startActivity(intent);
+            }
+        });
+
+        dinersListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
+                removeDiner(parent.getItemAtPosition(pos).toString());
+                dinersListAdapter.notifyDataSetChanged();
+                return true;
             }
         });
     }
