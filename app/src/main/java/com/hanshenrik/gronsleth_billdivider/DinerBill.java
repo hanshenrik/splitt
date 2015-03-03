@@ -7,34 +7,59 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import java.util.LinkedHashMap;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DinerBill extends ActionBarActivity {
-    private LinkedHashMap<String, double[]> items;
+    private HashMap<String, double[]> items;
+    ArrayList<String> itemsAsList;
     private ListView itemsListView;
+    private TextView totalCostView;
+    private double totalCost;
+    private static final DecimalFormat DF = new DecimalFormat("#.##");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diner_bill);
 
-        // dummy, should be fetched from somewhere
-        this.items = new LinkedHashMap<>();
-        items.put("beer", new double[]{3, 1});
-        items.put("wine btl", new double[]{11, 1 / 2});
-        items.put("steak", new double[] {15, 1} );
-        this.itemsListView = (ListView) findViewById(R.id.diner_items);
-        // TODO: create custom adapter for LinkedHashMap!
-        // ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        // itemsListView.setAdapter(adapter);
-
-
         Intent intent = getIntent();
         String dinerName = intent.getStringExtra(AddDiner.EXTRA_DINER_BILL_TITLE);
+        items = (HashMap<String, double[]>) intent.getSerializableExtra(AddDiner.EXTRA_ITEMS);
         getSupportActionBar().setTitle(dinerName + getString(R.string.title_suffix_activity_diner_bill));
 
-        //scales = intent.getStringArrayListExtra("Scales");
+        parseItems();
+
+        this.itemsListView = (ListView) findViewById(R.id.diner_items);
+        this.totalCostView = (TextView) findViewById(R.id.individual_total_cost);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsAsList);
+        itemsListView.setAdapter(adapter);
+
+        totalCostView.setText(getString(R.string.total_cost_prefix) + " £" + DF.format(totalCost));
+    }
+
+    private void parseItems() {
+        this.itemsAsList = new ArrayList<>(); // better to do this at top, when declaring field?
+        double[] values;
+        double price;
+        String fraction;
+        for (String item : items.keySet()) {
+            values = items.get(item);
+            price = values[0] * (1.0/values[1]);
+            fraction = (values[1] == 1) ? "(1)" : "(1/" + DF.format(values[1]) + ")";
+            itemsAsList.add(item + " // £" + DF.format(price) + " // " + fraction);
+
+            // calculate total cost while we're at it
+            totalCost += price;
+        }
+    }
+
+    private double getTotalCost() {
+        return this.totalCost;
     }
 
     @Override
