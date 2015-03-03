@@ -7,11 +7,29 @@
     tools:context="com.hanshenrik.gronsleth_billdivider.DinerBill">
 
     <ListView
+        android:id="@+id/diner_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/diner_items"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/divider"
+        android:layout_marginBottom="22dp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/individual_total_cost"
+        android:layout_marginBottom="22dp" />
+
+    <TextView
+        android:id="@+id/individual_total_cost"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/total_cost_prefix"
+        android:gravity="right"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
