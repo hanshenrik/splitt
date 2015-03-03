@@ -2,11 +2,18 @@
     <string name="app_name">Gronsleth_BillDivider</string>
 
     <string name="action_settings">Settings</string>
-    <string name="diner_name_input_placeholder">put diner name here…</string>
+    <string name="add_diner_name_input_placeholder">put diner name here..</string>
+    <string name="add_diner_success_message_suffix">added to the list of diners</string>
+    <string name="add_diner_remove_diner_success_message_suffix">removed from the list of diners</string>
+
     <string name="title_activity_diner_bill">diner\'s bill</string>
-    <string name="title_suffix_activity_diner_bill">\'s bill</string>
+    <string name="diner_bill_title_suffix">\'s bill</string>
+
     <string name="total_cost_prefix">total cost:</string>
-    <string name="add_diner_success_message">added to the list of diners.</string>
-    <string name="add_diner_error_message">it seems you entered an empty string.\ntry something a bit more creative, ey?</string>
-    <string name="remove_diner_success_message">removed from the list of diners.</string>
+    <string name="empty_string_error_message">it seems you entered an empty string.\ntry something a bit more creative, ey?</string>
+
+    <string name="title_activity_add_items">AddItems</string>
+    <string name="add_item_name_input_placeholder">put item name here..</string>
+    <string name="add_item_price_input_placeholder">put item price here..</string>
+    <string name="add_item_success_message_suffix">added to list of items</string>
 </resources>
