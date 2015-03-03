@@ -18,7 +18,7 @@ public class DinerBill extends ActionBarActivity {
     ArrayList<String> itemsAsList;
     private ListView itemsListView;
     private TextView totalCostView;
-    private double totalCost;
+    private double totalCost = 0;
     private static final DecimalFormat DF = new DecimalFormat("#.##");
 
     @Override
@@ -29,7 +29,7 @@ public class DinerBill extends ActionBarActivity {
         Intent intent = getIntent();
         String dinerName = intent.getStringExtra(AddDiner.EXTRA_DINER_BILL_TITLE);
         items = (HashMap<String, double[]>) intent.getSerializableExtra(AddDiner.EXTRA_ITEMS);
-        getSupportActionBar().setTitle(dinerName + getString(R.string.title_suffix_activity_diner_bill));
+        getSupportActionBar().setTitle(dinerName + getString(R.string.diner_bill_title_suffix));
 
         parseItems();
 
