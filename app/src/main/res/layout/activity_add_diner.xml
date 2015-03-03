@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/diner_name_input"
-        android:hint="@string/diner_name_input_placeholder"
+        android:hint="@string/add_diner_name_input_placeholder"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
         android:inputType="text"
