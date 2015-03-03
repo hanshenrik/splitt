@@ -20,7 +20,8 @@ import java.util.HashMap;
 
 public class AddDiner extends ActionBarActivity {
 
-    private ArrayList<String> diners;
+    private ArrayList<Diner> diners;
+    private ArrayList<String> dinerNames; // create custom adapter
     private EditText dinerNameInput;
     private ListView dinersListView;
     public final static String EXTRA_DINER_BILL_TITLE = "com.hanshenrik.gronsleth_billdivider.DINER_BILL_TITLE";
@@ -46,6 +47,7 @@ public class AddDiner extends ActionBarActivity {
         setContentView(R.layout.activity_add_diner);
 
         this.diners = new ArrayList<>();
+        this.dinerNames = new ArrayList<>();
         this.dinerNameInput = (EditText) findViewById(R.id.diner_name_input);
         this.dinersListView = (ListView) findViewById(R.id.diner_names);
 
@@ -58,7 +60,7 @@ public class AddDiner extends ActionBarActivity {
         items.put("nachos", new double[]{12, 3});
         items.put("steak", new double[] {15, 1});
 
-        final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, diners);
+        final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dinerNames);
         dinersListView.setAdapter(dinersListAdapter);
 
         dinerNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -119,23 +121,30 @@ public class AddDiner extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void addDiner(String diner) {
+    private void addDiner(String name) {
         // get rid of leading and trailing whitespaces
-        diner = diner.trim();
+        name = name.trim();
 
         // don't allow empty strings to be added
-        if (diner.isEmpty()) {
-            displayToast(getString(R.string.add_diner_error_message), Toast.LENGTH_LONG);
+        if (name.isEmpty()) {
+            displayToast(getString(R.string.empty_string_error_message), Toast.LENGTH_LONG);
         } else {
-            diners.add(diner);
-            displayToast("'" + diner + "' " + getString(R.string.add_diner_success_message), Toast.LENGTH_SHORT);
+            diners.add(new Diner(name));
+            dinerNames.add(name); // ugly fix
+            displayToast("'" + name + "' " + getString(R.string.add_diner_success_message_suffix), Toast.LENGTH_SHORT);
         }
     }
 
-    // NOT IN SPEC, but shouldn't be too hard to add 'hold long to delete' functionality
-    private void removeDiner(String diner) {
-        diners.remove(diner);
-        displayToast("'" + diner + "' " + getString(R.string.remove_diner_success_message), Toast.LENGTH_SHORT);
+    // NOT IN SPEC
+    // OBSOBS! might fuck up complete bill!
+    private void removeDiner(String name) {
+        for (Diner diner : diners) {
+            if (diner.getName().equals(name)) {
+                diners.remove(diner);
+                dinerNames.remove(name);
+            }
+        }
+        displayToast("'" + name + "' " + getString(R.string.add_diner_remove_diner_success_message_suffix), Toast.LENGTH_SHORT);
     }
 
     private void displayToast(CharSequence message, int duration) {
