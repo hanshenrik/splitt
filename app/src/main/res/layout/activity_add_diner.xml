@@ -11,7 +11,7 @@
         android:id="@+id/diner_name_input"
         android:hint="@string/diner_name_input_placeholder"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="44dp"
         android:inputType="text"
         android:imeOptions="actionDone" />
 
@@ -21,7 +21,7 @@
         android:id="@+id/diner_names"
         android:layout_below="@+id/diner_name_input"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="22dp"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
