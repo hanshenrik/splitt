@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DinerBill"
+            android:label="@string/title_activity_diner_bill"
+            android:parentActivityName=".AddDiner" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hanshenrik.gronsleth_billdivider.AddDiner" />
+        </activity>
     </application>
 
 </manifest>
