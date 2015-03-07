@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,22 +25,24 @@ public class AddDiner extends ActionBarActivity {
     private ArrayList<String> dinerNames; // create custom adapter
     private EditText dinerNameInput;
     private ListView dinersListView;
+    private Button addItemButton;
     public final static String EXTRA_DINER_BILL_TITLE = "com.hanshenrik.gronsleth_billdivider.DINER_BILL_TITLE";
     public final static String EXTRA_ITEMS = "com.hanshenrik.gronsleth_billdivider.ITEMS";
+    public final static String EXTRA_DINER_NAMES = "com.hanshenrik.gronsleth_billdivider.DINER_NAMES";
+    public final static String EXTRA_NEW_ITEMS = "com.hanshenrik.gronsleth_billdivider.NEW_ITEMS";
+    private final static int NEW_ITEMS_REQUEST = 1;
     private HashMap<String, double[]> items;
-//    private final static int DINER_BILL_REQUEST = 1;
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data){
-//        if (resultCode == RESULT_OK) {
-//            if (requestCode == DINER_BILL_REQUEST) {
-//                // do we really need to do anything here? don't think we're sending any info from the individual bill back here.
-//                System.out.println("requestCode == DINER_BILL_REQUEST");
-//                //scales = data.getStringArrayListExtra("Scales");
-//                //scaleIdx = 0;
-//            }
-//        }
-//    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (resultCode == RESULT_OK) {
+            if (requestCode == NEW_ITEMS_REQUEST) {
+                System.out.println("requestCode == NEW_ITEMS_REQUEST");
+                items = (HashMap) data.getSerializableExtra("EXTRA_NEW_ITEMS");
+                displayToast(items.toString(), Toast.LENGTH_LONG);
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class AddDiner extends ActionBarActivity {
         this.dinerNames = new ArrayList<>();
         this.dinerNameInput = (EditText) findViewById(R.id.diner_name_input);
         this.dinersListView = (ListView) findViewById(R.id.diner_names);
+        this.addItemButton = (Button) findViewById(R.id.go_to_add_item_button);
 
 
         // dummy data. maybe keep in AddItems class and fetched from there?
@@ -83,9 +87,6 @@ public class AddDiner extends ActionBarActivity {
                 intent.putExtra(EXTRA_DINER_BILL_TITLE, parent.getItemAtPosition(pos).toString());
                 intent.putExtra(EXTRA_ITEMS, items);
                 startActivity(intent);
-
-                //startActivityForResult(intent, DINER_BILL_REQUEST);
-                //startActivity(intent);
             }
         });
 
@@ -95,6 +96,18 @@ public class AddDiner extends ActionBarActivity {
                 removeDiner(parent.getItemAtPosition(pos).toString());
                 dinersListAdapter.notifyDataSetChanged();
                 return true;
+            }
+        });
+
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddItems.class);
+                intent.putExtra(EXTRA_DINER_NAMES, dinerNames);
+                startActivity(intent);
+
+                //startActivityForResult(intent, DINER_BILL_REQUEST);
+                //startActivity(intent);
             }
         });
     }
@@ -130,13 +143,13 @@ public class AddDiner extends ActionBarActivity {
             displayToast(getString(R.string.empty_string_error_message), Toast.LENGTH_LONG);
         } else {
             diners.add(new Diner(name));
-            dinerNames.add(name); // ugly fix
+            dinerNames.add(name); // ugly fix, make custom adapter
             displayToast("'" + name + "' " + getString(R.string.add_diner_success_message_suffix), Toast.LENGTH_SHORT);
         }
     }
 
     // NOT IN SPEC
-    // OBSOBS! might fuck up complete bill!
+    // OBSOBS! might screw up complete bill!
     private void removeDiner(String name) {
         for (Diner diner : diners) {
             if (diner.getName().equals(name)) {
