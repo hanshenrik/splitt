@@ -16,4 +16,6 @@
     <string name="add_item_name_input_placeholder">put item name here..</string>
     <string name="add_item_price_input_placeholder">put item price here..</string>
     <string name="add_item_success_message_suffix">added to list of items</string>
+    <string name="add_item_button">add item</string>
+    <string name="add_item_done_button">done</string>
 </resources>
