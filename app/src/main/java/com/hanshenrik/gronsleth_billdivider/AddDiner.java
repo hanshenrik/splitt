@@ -3,6 +3,7 @@ package com.hanshenrik.gronsleth_billdivider;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,9 +16,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AddDiner extends ActionBarActivity {
 
@@ -31,15 +30,15 @@ public class AddDiner extends ActionBarActivity {
     public final static String EXTRA_DINER_NAMES = "com.hanshenrik.gronsleth_billdivider.DINER_NAMES";
     public final static String EXTRA_NEW_ITEMS = "com.hanshenrik.gronsleth_billdivider.NEW_ITEMS";
     private final static int NEW_ITEMS_REQUEST = 1;
-    private HashMap<String, double[]> items;
+    private ArrayList<Item> items;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == RESULT_OK) {
             if (requestCode == NEW_ITEMS_REQUEST) {
-                System.out.println("requestCode == NEW_ITEMS_REQUEST");
-                items = (HashMap) data.getSerializableExtra("EXTRA_NEW_ITEMS");
-                displayToast(items.toString(), Toast.LENGTH_LONG);
+                Log.d("AddDiner", "requestCode == NEW_ITEMS_REQUEST");
+                items = (ArrayList<Item>) data.getSerializableExtra("EXTRA_NEW_ITEMS");
+                displayToast("new items arrived!", Toast.LENGTH_SHORT);
             }
         }
     }
@@ -48,21 +47,15 @@ public class AddDiner extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_diner);
+        initialize();
 
-        this.diners = new ArrayList<>();
-        this.dinerNames = new ArrayList<>();
-        this.dinerNameInput = (EditText) findViewById(R.id.diner_name_input);
-        this.dinersListView = (ListView) findViewById(R.id.diner_names);
-        this.addItemButton = (Button) findViewById(R.id.go_to_add_item_button);
-
-
-        // dummy data. maybe keep in AddItems class and fetched from there?
-        this.items = new HashMap<>();
-        //        item                   total price  shared between, do 1.0/this when presenting/calculating
-        items.put("beer", new double[] { 3,           1 });
-        items.put("wine btl", new double[]{11, 3});
-        items.put("nachos", new double[]{12, 3});
-        items.put("steak", new double[] {15, 1});
+//        // dummy data. maybe keep in AddItems class and fetched from there?
+//        this.items = new HashMap<>();
+//        //        item                   total price  shared between, do 1.0/this when presenting/calculating
+//        items.put("beer", new double[] { 3,           1 });
+//        items.put("wine btl", new double[]{11, 3});
+//        items.put("nachos", new double[]{12, 3});
+//        items.put("steak", new double[] {15, 1});
 
         final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dinerNames);
         dinersListView.setAdapter(dinersListAdapter);
@@ -75,8 +68,8 @@ public class AddDiner extends ActionBarActivity {
                     dinersListAdapter.notifyDataSetChanged();
                     dinerNameInput.setText("");
                 }
-                // hide keyboard when clicking 'Done' by returning false
-                return false;
+                // hide keyboard when clicking 'Done' by returning false, but don't want that for now
+                return true;
             }
         });
 
@@ -85,53 +78,38 @@ public class AddDiner extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 Intent intent = new Intent(getApplicationContext(), DinerBill.class);
                 intent.putExtra(EXTRA_DINER_BILL_TITLE, parent.getItemAtPosition(pos).toString());
+                // TODO: distinguish between all items, previously received from AddItems and this diners items!
                 intent.putExtra(EXTRA_ITEMS, items);
                 startActivity(intent);
             }
         });
 
-        dinersListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
-                removeDiner(parent.getItemAtPosition(pos).toString());
-                dinersListAdapter.notifyDataSetChanged();
-                return true;
-            }
-        });
+//        dinersListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
+//                removeDiner(parent.getItemAtPosition(pos).toString());
+//                dinersListAdapter.notifyDataSetChanged();
+//                return true;
+//            }
+//        });
 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AddItems.class);
                 intent.putExtra(EXTRA_DINER_NAMES, dinerNames);
+                startActivityForResult(intent, NEW_ITEMS_REQUEST);
                 startActivity(intent);
-
-                //startActivityForResult(intent, DINER_BILL_REQUEST);
-                //startActivity(intent);
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_diner, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void initialize() {
+        this.diners = new ArrayList<>();
+        this.dinerNames = new ArrayList<>();
+        this.dinerNameInput = (EditText) findViewById(R.id.diner_name_input);
+        this.dinersListView = (ListView) findViewById(R.id.diner_names);
+        this.addItemButton = (Button) findViewById(R.id.go_to_add_item_button);
     }
 
     private void addDiner(String name) {
@@ -162,5 +140,27 @@ public class AddDiner extends ActionBarActivity {
 
     private void displayToast(CharSequence message, int duration) {
         Toast.makeText(getApplicationContext(), message, duration).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_add_diner, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
