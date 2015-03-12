@@ -117,6 +117,11 @@ public class AddItems extends ActionBarActivity {
         }
     }
 
+    // TODO: duplicate, put in util class?
+    private void displayToast(CharSequence message, int duration) {
+        Toast.makeText(getApplicationContext(), message, duration).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -137,9 +142,5 @@ public class AddItems extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void displayToast(CharSequence message, int duration) {
-        Toast.makeText(getApplicationContext(), message, duration).show();
     }
 }

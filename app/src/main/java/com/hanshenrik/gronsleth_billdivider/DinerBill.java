@@ -28,6 +28,7 @@ public class DinerBill extends ActionBarActivity {
 
         Intent intent = getIntent();
         String dinerName = intent.getStringExtra(AddDiner.EXTRA_DINER_BILL_TITLE);
+        // TODO: items in now ArrayList<Item>, fix!
         items = (HashMap<String, double[]>) intent.getSerializableExtra(AddDiner.EXTRA_ITEMS);
         getSupportActionBar().setTitle(dinerName + getString(R.string.diner_bill_title_suffix));
 
