@@ -15,4 +15,16 @@ public class Item {
         this.price = price;
         this.buyers = buyers;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public ArrayList<String> getBuyers() {
+        return buyers;
+    }
 }
