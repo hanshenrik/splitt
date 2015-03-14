@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddDiner extends ActionBarActivity {
 
@@ -30,15 +31,23 @@ public class AddDiner extends ActionBarActivity {
     public final static String EXTRA_DINER_NAMES = "com.hanshenrik.gronsleth_billdivider.DINER_NAMES";
     public final static String EXTRA_NEW_ITEMS = "com.hanshenrik.gronsleth_billdivider.NEW_ITEMS";
     private final static int NEW_ITEMS_REQUEST = 1;
-    private ArrayList<Item> items;
+    private HashMap<String, double[]> dinerItems;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == RESULT_OK) {
             if (requestCode == NEW_ITEMS_REQUEST) {
-                Log.d("AddDiner", "requestCode == NEW_ITEMS_REQUEST");
-                items = (ArrayList<Item>) data.getSerializableExtra("EXTRA_NEW_ITEMS");
-                displayToast("new items arrived!", Toast.LENGTH_SHORT);
+                ArrayList<Item> newItems = (ArrayList<Item>) data.getSerializableExtra(EXTRA_NEW_ITEMS);
+                // TODO: review structure. too many nested for loops, even though data set is always small.
+                for (Item item : newItems) {
+                    for (String buyer : item.getBuyers()) {
+                        for (Diner diner : diners) {
+                            if (diner.getName().equals(buyer)) {
+                                diner.addItem(item.getName(), item.getPrice(), item.getBuyers().length);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -48,14 +57,6 @@ public class AddDiner extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_diner);
         initialize();
-
-//        // dummy data. maybe keep in AddItems class and fetched from there?
-//        this.items = new HashMap<>();
-//        //        item                   total price  shared between, do 1.0/this when presenting/calculating
-//        items.put("beer", new double[] { 3,           1 });
-//        items.put("wine btl", new double[]{11, 3});
-//        items.put("nachos", new double[]{12, 3});
-//        items.put("steak", new double[] {15, 1});
 
         final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dinerNames);
         dinersListView.setAdapter(dinersListAdapter);
@@ -76,10 +77,12 @@ public class AddDiner extends ActionBarActivity {
         dinersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                String dinerName = parent.getItemAtPosition(pos).toString();
+                dinerItems = getCurrentDinerItems(dinerName);
+
                 Intent intent = new Intent(getApplicationContext(), DinerBill.class);
-                intent.putExtra(EXTRA_DINER_BILL_TITLE, parent.getItemAtPosition(pos).toString());
-                // TODO: distinguish between all items, previously received from AddItems and this diners items!
-                intent.putExtra(EXTRA_ITEMS, items);
+                intent.putExtra(EXTRA_DINER_BILL_TITLE, dinerName);
+                intent.putExtra(EXTRA_ITEMS, dinerItems);
                 startActivity(intent);
             }
         });
@@ -88,11 +91,19 @@ public class AddDiner extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AddItems.class);
-                intent.putExtra(EXTRA_DINER_NAMES, dinerNames);
+                intent.putStringArrayListExtra(EXTRA_DINER_NAMES, dinerNames);
                 startActivityForResult(intent, NEW_ITEMS_REQUEST);
-                startActivity(intent);
             }
         });
+    }
+
+    private HashMap<String, double[]> getCurrentDinerItems(String dinerName) {
+        for (Diner diner : diners) {
+            if (diner.getName().equals(dinerName)) {
+                return diner.getItems();
+            }
+        }
+        return null;
     }
 
     private void initialize() {
@@ -123,7 +134,7 @@ public class AddDiner extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds newItems to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_diner, menu);
         return true;
     }
