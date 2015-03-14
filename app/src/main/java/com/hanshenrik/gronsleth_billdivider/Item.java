@@ -1,16 +1,16 @@
 package com.hanshenrik.gronsleth_billdivider;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * Created by hanshenrik on 12/03/15.
  */
-public class Item {
+public class Item implements Serializable {
     private final String name;
     private final double price;
-    private final ArrayList<String> buyers;
+    private final String[] buyers;
 
-    public Item(String name, double price, ArrayList<String> buyers) {
+    public Item(String name, double price, String[] buyers) {
         this.name = name;
         this.price = price;
         this.buyers = buyers;
@@ -24,7 +24,7 @@ public class Item {
         return price;
     }
 
-    public ArrayList<String> getBuyers() {
+    public String[] getBuyers() {
         return buyers;
     }
 }
