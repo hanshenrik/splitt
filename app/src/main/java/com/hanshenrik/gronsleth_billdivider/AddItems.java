@@ -3,6 +3,7 @@ package com.hanshenrik.gronsleth_billdivider;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class AddItems extends ActionBarActivity {
     private ArrayList<Item> items;
     private ArrayList<String> buyers;
-    private ArrayList<String> dinerNames; // create custom adapter?
     private EditText itemNameInput, itemPriceInput;
     private ListView dinersListView;
     private Button addItemButton, doneButton;
@@ -35,7 +34,7 @@ public class AddItems extends ActionBarActivity {
 
         // get the list of diners
         Intent intent = getIntent();
-        this.dinerNames = (ArrayList) intent.getSerializableExtra(AddDiner.EXTRA_DINER_NAMES);
+        ArrayList<String> dinerNames = intent.getStringArrayListExtra(AddDiner.EXTRA_DINER_NAMES);
 
         final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, dinerNames);
         dinersListView.setAdapter(dinersListAdapter);
@@ -72,7 +71,7 @@ public class AddItems extends ActionBarActivity {
 
                 addItem(itemNameInput.getText().toString(), itemPriceInput.getText().toString());
                 dinersListView.clearChoices();
-                dinersListAdapter.notifyDataSetChanged(); // does this change background choices for selected?
+                dinersListAdapter.notifyDataSetChanged();
                 itemNameInput.setText("");
                 itemPriceInput.setText("");
                 buyers.clear();
@@ -112,7 +111,7 @@ public class AddItems extends ActionBarActivity {
         }
         // TODO: validate price input
         else {
-            items.add(new Item(name, price, buyers));
+            items.add(new Item(name, price, buyers.toArray(new String[buyers.size()])));
             displayToast("'" + name + "' " + getString(R.string.add_item_success_message_suffix), Toast.LENGTH_SHORT);
         }
     }
