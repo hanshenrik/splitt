@@ -84,15 +84,6 @@ public class AddDiner extends ActionBarActivity {
             }
         });
 
-//        dinersListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
-//                removeDiner(parent.getItemAtPosition(pos).toString());
-//                dinersListAdapter.notifyDataSetChanged();
-//                return true;
-//            }
-//        });
-
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,18 +115,6 @@ public class AddDiner extends ActionBarActivity {
             dinerNames.add(name); // ugly fix, make custom adapter
             displayToast("'" + name + "' " + getString(R.string.add_diner_success_message_suffix), Toast.LENGTH_SHORT);
         }
-    }
-
-    // NOT IN SPEC
-    // OBSOBS! might screw up complete bill!
-    private void removeDiner(String name) {
-        for (Diner diner : diners) {
-            if (diner.getName().equals(name)) {
-                diners.remove(diner);
-                dinerNames.remove(name);
-            }
-        }
-        displayToast("'" + name + "' " + getString(R.string.add_diner_remove_diner_success_message_suffix), Toast.LENGTH_SHORT);
     }
 
     private void displayToast(CharSequence message, int duration) {
