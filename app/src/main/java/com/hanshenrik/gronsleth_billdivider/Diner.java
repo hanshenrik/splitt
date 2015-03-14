@@ -19,7 +19,7 @@ public class Diner {
         return name;
     }
 
-    public HashMap getItems() {
+    public HashMap<String, double[]> getItems() {
         return items;
     }
 
