@@ -1,11 +1,12 @@
 package com.hanshenrik.gronsleth_billdivider;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by hanshenrik on 12/02/15.
  */
-public class Diner {
+public class Diner implements Serializable {
     private final String name;
     private HashMap<String, double[]> items;
     private double total;
