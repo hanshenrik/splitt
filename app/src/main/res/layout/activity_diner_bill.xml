@@ -30,6 +30,7 @@
         android:text="@string/total_cost_prefix"
         android:gravity="right"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        style="@style/Base.TextAppearance.AppCompat.Title" />
 
 </RelativeLayout>
