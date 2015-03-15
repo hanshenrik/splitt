@@ -29,12 +29,12 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/diner_names"
         android:layout_below="@+id/item_price_input"
-        android:layout_above="@+id/add_item_button"
         android:layout_centerHorizontal="true"
         android:choiceMode="multipleChoice"
+        android:layout_marginBottom="44dp"
         android:layout_marginTop="22dp" />
 
     <Button
@@ -50,6 +50,8 @@
         android:layout_height="wrap_content"
         android:text="@string/add_item_done_button"
         android:id="@+id/add_item_done_button"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
