@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class Diner implements Serializable {
     private final String name;
     private HashMap<String, double[]> items;
-    private double total;
+    private double total = 0;
 
     public Diner(String name) {
         this.name = name;
@@ -28,10 +28,14 @@ public class Diner implements Serializable {
         return total;
     }
 
-    public void addItem(String name, double price, double fraction) {
-        items.put(name, new double[] { price, fraction });
+    public void addItem(String name, double price, double splitBetween) {
+        items.put(name, new double[] { price, splitBetween });
 
         // update total
-        this.total += price*fraction;
+        this.total += price*(1.0/splitBetween);
+    }
+
+    public String toString() {
+        return getName() + " // £" + getTotal();
     }
 }
