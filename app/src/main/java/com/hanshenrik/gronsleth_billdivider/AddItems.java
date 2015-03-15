@@ -34,9 +34,9 @@ public class AddItems extends ActionBarActivity {
 
         // get the list of diners
         Intent intent = getIntent();
-        ArrayList<String> dinerNames = intent.getStringArrayListExtra(AddDiner.EXTRA_DINER_NAMES);
+        ArrayList<String> diners = intent.getStringArrayListExtra(AddDiner.EXTRA_DINERS);
 
-        final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, dinerNames);
+        final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, diners);
         dinersListView.setAdapter(dinersListAdapter);
 
         itemNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
