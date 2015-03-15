@@ -27,4 +27,9 @@ public class Item implements Serializable {
     public String[] getBuyers() {
         return buyers;
     }
+
+    @Override
+    public String toString() {
+        return getName() + " // £" + getPrice();
+    }
 }
