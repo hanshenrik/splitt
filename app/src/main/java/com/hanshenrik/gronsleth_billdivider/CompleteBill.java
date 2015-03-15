@@ -3,7 +3,6 @@ package com.hanshenrik.gronsleth_billdivider;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +32,7 @@ public class CompleteBill extends ActionBarActivity {
 
         // get the items
         Intent intent = getIntent();
-        items = (ArrayList<Item>) intent.getSerializableExtra(AddDiner.EXTRA_ITEMS);
+        items = (ArrayList<Item>) intent.getSerializableExtra(AddDiners.EXTRA_ITEMS);
 
         // calculate total cost
         for (Item item : items) {

@@ -3,7 +3,6 @@ package com.hanshenrik.gronsleth_billdivider;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,7 +33,7 @@ public class AddItems extends ActionBarActivity {
 
         // get the list of diners
         Intent intent = getIntent();
-        ArrayList<String> diners = intent.getStringArrayListExtra(AddDiner.EXTRA_DINERS);
+        ArrayList<String> diners = intent.getStringArrayListExtra(AddDiners.EXTRA_DINERS);
 
         final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, diners);
         dinersListView.setAdapter(dinersListAdapter);
@@ -82,7 +81,7 @@ public class AddItems extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent result = new Intent();
-                result.putExtra(AddDiner.EXTRA_NEW_ITEMS, items);
+                result.putExtra(AddDiners.EXTRA_NEW_ITEMS, items);
                 setResult(RESULT_OK, result);
                 finish();
             }

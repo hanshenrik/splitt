@@ -3,7 +3,6 @@ package com.hanshenrik.gronsleth_billdivider;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AddDiner extends ActionBarActivity {
+public class AddDiners extends ActionBarActivity {
 
     private ArrayList<Diner> diners;
     private EditText dinerNameInput;
@@ -59,7 +58,7 @@ public class AddDiner extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_diner);
+        setContentView(R.layout.activity_add_diners);
         initialize();
 
         dinerNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
