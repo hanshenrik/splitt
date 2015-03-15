@@ -22,22 +22,25 @@ import java.util.HashMap;
 public class AddDiner extends ActionBarActivity {
 
     private ArrayList<Diner> diners;
-    private ArrayList<String> dinerNames; // create custom adapter
     private EditText dinerNameInput;
     private ListView dinersListView;
-    private Button addItemButton;
-    public final static String EXTRA_DINER_BILL_TITLE = "com.hanshenrik.gronsleth_billdivider.DINER_BILL_TITLE";
-    public final static String EXTRA_ITEMS = "com.hanshenrik.gronsleth_billdivider.ITEMS";
-    public final static String EXTRA_DINER_NAMES = "com.hanshenrik.gronsleth_billdivider.DINER_NAMES";
-    public final static String EXTRA_NEW_ITEMS = "com.hanshenrik.gronsleth_billdivider.NEW_ITEMS";
-    private final static int NEW_ITEMS_REQUEST = 1;
+    private Button addItemButton, completeBillButton;
     private HashMap<String, double[]> dinerItems;
+    private ArrayList<Item> items;
+    private ArrayAdapter dinersListAdapter;
+    public final static String EXTRA_DINER_BILL_TITLE = "com.hanshenrik.gronsleth_billdivider.DINER_BILL_TITLE";
+    public final static String EXTRA_DINER_ITEMS =      "com.hanshenrik.gronsleth_billdivider.DINER_ITEMS";
+    public final static String EXTRA_DINERS =           "com.hanshenrik.gronsleth_billdivider.DINERS";
+    public final static String EXTRA_NEW_ITEMS =        "com.hanshenrik.gronsleth_billdivider.NEW_ITEMS";
+    public final static String EXTRA_ITEMS =            "com.hanshenrik.gronsleth_billdivider.ITEMS";
+    private final static int NEW_ITEMS_REQUEST = 1;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == RESULT_OK) {
             if (requestCode == NEW_ITEMS_REQUEST) {
                 ArrayList<Item> newItems = (ArrayList<Item>) data.getSerializableExtra(EXTRA_NEW_ITEMS);
+                items.addAll(newItems);
                 // TODO: review structure. too many nested for loops, even though data set is always small.
                 for (Item item : newItems) {
                     for (String buyer : item.getBuyers()) {
@@ -48,6 +51,7 @@ public class AddDiner extends ActionBarActivity {
                         }
                     }
                 }
+                dinersListAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -57,9 +61,6 @@ public class AddDiner extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_diner);
         initialize();
-
-        final ArrayAdapter dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dinerNames);
-        dinersListView.setAdapter(dinersListAdapter);
 
         dinerNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -77,12 +78,12 @@ public class AddDiner extends ActionBarActivity {
         dinersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                String dinerName = parent.getItemAtPosition(pos).toString();
+                String dinerName = parent.getItemAtPosition(pos).toString().split(" ")[0];
                 dinerItems = getCurrentDinerItems(dinerName);
 
                 Intent intent = new Intent(getApplicationContext(), DinerBill.class);
                 intent.putExtra(EXTRA_DINER_BILL_TITLE, dinerName);
-                intent.putExtra(EXTRA_ITEMS, dinerItems);
+                intent.putExtra(EXTRA_DINER_ITEMS, dinerItems);
                 startActivity(intent);
             }
         });
@@ -91,15 +92,32 @@ public class AddDiner extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AddItems.class);
-                intent.putStringArrayListExtra(EXTRA_DINER_NAMES, dinerNames);
+                intent.putExtra(EXTRA_DINERS, getDinerNamesOnly());
                 startActivityForResult(intent, NEW_ITEMS_REQUEST);
+            }
+        });
+
+        completeBillButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CompleteBill.class);
+                intent.putExtra(EXTRA_ITEMS, items);
+                startActivity(intent);
             }
         });
     }
 
-    private HashMap<String, double[]> getCurrentDinerItems(String dinerName) {
+    private ArrayList<String> getDinerNamesOnly() {
+        ArrayList<String> dinerNames = new ArrayList<>();
         for (Diner diner : diners) {
-            if (diner.getName().equals(dinerName)) {
+            dinerNames.add(diner.getName());
+        }
+        return dinerNames;
+    }
+
+    private HashMap<String, double[]> getCurrentDinerItems(String name) {
+        for (Diner diner : diners) {
+            if (diner.getName().equals(name)) {
                 return diner.getItems();
             }
         }
@@ -108,10 +126,14 @@ public class AddDiner extends ActionBarActivity {
 
     private void initialize() {
         this.diners = new ArrayList<>();
-        this.dinerNames = new ArrayList<>();
+        this.items = new ArrayList<>();
         this.dinerNameInput = (EditText) findViewById(R.id.diner_name_input);
         this.dinersListView = (ListView) findViewById(R.id.diner_names);
         this.addItemButton = (Button) findViewById(R.id.go_to_add_item_button);
+        this.completeBillButton = (Button) findViewById(R.id.go_to_complete_bill_button);
+
+        this.dinersListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, diners);
+        this.dinersListView.setAdapter(dinersListAdapter);
     }
 
     private void addDiner(String name) {
@@ -123,7 +145,6 @@ public class AddDiner extends ActionBarActivity {
             displayToast(getString(R.string.empty_string_error_message), Toast.LENGTH_LONG);
         } else {
             diners.add(new Diner(name));
-            dinerNames.add(name); // ugly fix, make custom adapter
             displayToast("'" + name + "' " + getString(R.string.add_diner_success_message_suffix), Toast.LENGTH_SHORT);
         }
     }
