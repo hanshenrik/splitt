@@ -9,7 +9,7 @@
     <string name="title_activity_diner_bill">diner\'s bill</string>
     <string name="diner_bill_title_suffix">\'s bill</string>
 
-    <string name="total_cost_prefix">total cost:</string>
+    <string name="total_cost_prefix">total cost: £</string>
     <string name="empty_string_error_message">it seems you entered an empty string.\ntry something a bit more creative, ey?</string>
 
     <string name="title_activity_add_items">AddItems</string>
@@ -18,4 +18,7 @@
     <string name="add_item_success_message_suffix">added to list of items</string>
     <string name="add_item_button">add item</string>
     <string name="add_item_done_button">done</string>
+
+    <string name="title_activity_complete_bill">CompleteBill</string>
+    <string name="complete_bill_buyers_prefix">bought by</string>
 </resources>

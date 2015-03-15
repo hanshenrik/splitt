@@ -32,6 +32,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hanshenrik.gronsleth_billdivider.AddDiner" />
         </activity>
+        <activity
+            android:name=".CompleteBill"
+            android:label="@string/title_activity_complete_bill"
+            android:parentActivityName=".AddDiner" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hanshenrik.gronsleth_billdivider.AddDiner" />
+        </activity>
     </application>
 
 </manifest>
