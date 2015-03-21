@@ -68,12 +68,24 @@ public class AddItems extends ActionBarActivity {
                     }
                 }
 
-                addItem(itemNameInput.getText().toString(), itemPriceInput.getText().toString());
-                dinersListView.clearChoices();
-                dinersListAdapter.notifyDataSetChanged();
-                itemNameInput.setText("");
-                itemPriceInput.setText("");
-                buyers.clear();
+                String name = itemNameInput.getText().toString().trim();
+                String priceStr = itemPriceInput.getText().toString();
+                // don't allow empty strings to be added
+                if (name.isEmpty()) {
+                    displayToast(getString(R.string.empty_string_error_message), Toast.LENGTH_LONG);
+                }
+                // don't allow price to be unspecified
+                else if (priceStr.equals("")) {
+                    displayToast(getString(R.string.empty_price_error_message), Toast.LENGTH_LONG);
+                }
+                else {
+                    addItem(name, priceStr);
+                    dinersListView.clearChoices();
+                    dinersListAdapter.notifyDataSetChanged();
+                    itemNameInput.setText("");
+                    itemPriceInput.setText("");
+                    buyers.clear();
+                }
             }
         });
 
@@ -100,19 +112,9 @@ public class AddItems extends ActionBarActivity {
     }
 
     private void addItem(String name, String priceStr) {
-        // get rid of leading and trailing whitespaces
-        name = name.trim();
         double price = Double.parseDouble(priceStr);
-
-        // don't allow empty strings to be added
-        if (name.isEmpty()) {
-            displayToast(getString(R.string.empty_string_error_message), Toast.LENGTH_LONG);
-        }
-        // TODO: validate price input
-        else {
-            items.add(new Item(name, price, buyers.toArray(new String[buyers.size()])));
-            displayToast("'" + name + "' " + getString(R.string.add_item_success_message_suffix), Toast.LENGTH_SHORT);
-        }
+        items.add(new Item(name, price, buyers.toArray(new String[buyers.size()])));
+        displayToast("'" + name + "' " + getString(R.string.add_item_success_message_suffix), Toast.LENGTH_SHORT);
     }
 
     // TODO: duplicate, put in util class?

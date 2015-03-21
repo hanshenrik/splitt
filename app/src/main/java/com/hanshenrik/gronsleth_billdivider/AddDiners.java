@@ -41,16 +41,18 @@ public class AddDiners extends ActionBarActivity {
                 ArrayList<Item> newItems = (ArrayList<Item>) data.getSerializableExtra(EXTRA_NEW_ITEMS);
                 items.addAll(newItems);
                 // TODO: review structure. too many nested for loops, even though data set is always small.
-                for (Item item : newItems) {
-                    for (String buyer : item.getBuyers()) {
-                        for (Diner diner : diners) {
-                            if (diner.getName().equals(buyer)) {
-                                diner.addItem(item.getName(), item.getPrice(), item.getBuyers().length);
+                if (!newItems.isEmpty()) {
+                    for (Item item : newItems) {
+                        for (String buyer : item.getBuyers()) {
+                            for (Diner diner : diners) {
+                                if (diner.getName().equals(buyer)) {
+                                    diner.addItem(item.getName(), item.getPrice(), item.getBuyers().length);
+                                }
                             }
                         }
                     }
+                    dinersListAdapter.notifyDataSetChanged();
                 }
-                dinersListAdapter.notifyDataSetChanged();
             }
         }
     }

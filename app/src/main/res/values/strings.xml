@@ -23,4 +23,5 @@
 
     <string name="total_cost_prefix">total cost: £</string>
     <string name="empty_string_error_message">it seems you entered an empty string.\ntry something a bit more creative, ey?</string>
+    <string name="empty_price_error_message">it seems you forgot to enter a price.\nwasn\'t free, was it?</string>
 </resources>
