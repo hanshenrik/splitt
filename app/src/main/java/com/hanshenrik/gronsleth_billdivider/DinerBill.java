@@ -51,7 +51,7 @@ public class DinerBill extends ActionBarActivity {
             values = items.get(item);
             price = values[0] * (1.0/values[1]);
             fraction = (values[1] == 1) ? "(1)" : "(1/" + DF.format(values[1]) + ")";
-            itemsAsList.add(item + " // £" + DF.format(price) + " // " + fraction);
+            itemsAsList.add(item + " // " + fraction + " // £" + DF.format(price));
 
             // calculate total cost while we're at it
             totalCost += price;
