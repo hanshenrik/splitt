@@ -15,9 +15,7 @@ import java.util.HashMap;
 
 public class DinerBill extends ActionBarActivity {
     private HashMap<String, double[]> items;
-    ArrayList<String> itemsAsList;
-    private ListView itemsListView;
-    private TextView totalCostView;
+    ArrayList<String> itemsAsList = new ArrayList<>();
     private double totalCost = 0;
     private static final DecimalFormat DF = new DecimalFormat("#.##");
 
@@ -33,8 +31,8 @@ public class DinerBill extends ActionBarActivity {
 
         parseItems();
 
-        this.itemsListView = (ListView) findViewById(R.id.diner_items);
-        this.totalCostView = (TextView) findViewById(R.id.individual_total_cost);
+        ListView itemsListView = (ListView) findViewById(R.id.diner_items);
+        TextView totalCostView = (TextView) findViewById(R.id.individual_total_cost);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsAsList);
         itemsListView.setAdapter(adapter);
@@ -43,7 +41,6 @@ public class DinerBill extends ActionBarActivity {
     }
 
     private void parseItems() {
-        this.itemsAsList = new ArrayList<>(); // better to do this at top, when declaring field?
         double[] values;
         double price;
         String fraction;
@@ -56,10 +53,6 @@ public class DinerBill extends ActionBarActivity {
             // calculate total cost while we're at it
             totalCost += price;
         }
-    }
-
-    private double getTotalCost() {
-        return this.totalCost;
     }
 
     @Override

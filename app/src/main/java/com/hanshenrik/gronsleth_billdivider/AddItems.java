@@ -23,13 +23,20 @@ public class AddItems extends ActionBarActivity {
     private ArrayList<String> buyers;
     private EditText itemNameInput, itemPriceInput;
     private ListView dinersListView;
-    private Button addItemButton, doneButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_items);
-        initialize();
+
+        this.items = new ArrayList<>();
+        this.buyers = new ArrayList<>();
+
+        this.itemNameInput = (EditText) findViewById(R.id.item_name_input);
+        this.itemPriceInput = (EditText) findViewById(R.id.item_price_input);
+        this.dinersListView = (ListView) findViewById(R.id.diner_names);
+        Button addItemButton = (Button) findViewById(R.id.add_item_button);
+        Button doneButton = (Button) findViewById(R.id.add_item_done_button);
 
         // get the list of diners
         Intent intent = getIntent();
@@ -70,15 +77,16 @@ public class AddItems extends ActionBarActivity {
 
                 String name = itemNameInput.getText().toString().trim();
                 String priceStr = itemPriceInput.getText().toString();
-                // don't allow empty strings to be added
+                // don't allow name to be unspecified
                 if (name.isEmpty()) {
-                    displayToast(getString(R.string.empty_string_error_message), Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(), getString(R.string.empty_string_error_message),
+                            Toast.LENGTH_LONG).show();
                 }
                 // don't allow price to be unspecified
                 else if (priceStr.equals("")) {
-                    displayToast(getString(R.string.empty_price_error_message), Toast.LENGTH_LONG);
-                }
-                else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.empty_price_error_message),
+                            Toast.LENGTH_LONG).show();
+                } else {
                     addItem(name, priceStr);
                     dinersListView.clearChoices();
                     dinersListAdapter.notifyDataSetChanged();
@@ -100,26 +108,11 @@ public class AddItems extends ActionBarActivity {
         });
     }
 
-    private void initialize() {
-        this.items = new ArrayList<>();
-        this.buyers = new ArrayList<>();
-
-        this.itemNameInput = (EditText) findViewById(R.id.item_name_input);
-        this.itemPriceInput = (EditText) findViewById(R.id.item_price_input);
-        this.dinersListView = (ListView) findViewById(R.id.diner_names);
-        this.addItemButton = (Button) findViewById(R.id.add_item_button);
-        this.doneButton = (Button) findViewById(R.id.add_item_done_button);
-    }
-
     private void addItem(String name, String priceStr) {
         double price = Double.parseDouble(priceStr);
         items.add(new Item(name, price, buyers.toArray(new String[buyers.size()])));
-        displayToast("'" + name + "' " + getString(R.string.add_item_success_message_suffix), Toast.LENGTH_SHORT);
-    }
-
-    // TODO: duplicate, put in util class?
-    private void displayToast(CharSequence message, int duration) {
-        Toast.makeText(getApplicationContext(), message, duration).show();
+        Toast.makeText(getApplicationContext(), "'" + name + "' " +
+                getString(R.string.add_item_success_message_suffix), Toast.LENGTH_SHORT).show();
     }
 
     @Override

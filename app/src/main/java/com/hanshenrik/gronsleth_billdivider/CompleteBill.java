@@ -19,8 +19,6 @@ import java.util.Arrays;
 
 public class CompleteBill extends ActionBarActivity {
     private ArrayList<Item> items;
-    private ListView itemListView;
-    private TextView totalCostView;
     private double totalCost = 0;
     private static final DecimalFormat DF = new DecimalFormat("#.##");
 
@@ -28,7 +26,8 @@ public class CompleteBill extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_bill);
-        initialize();
+        ListView itemListView = (ListView) findViewById(R.id.items);
+        TextView totalCostView = (TextView) findViewById(R.id.total_cost);
 
         // get the items
         Intent intent = getIntent();
@@ -36,7 +35,7 @@ public class CompleteBill extends ActionBarActivity {
 
         // calculate total cost
         for (Item item : items) {
-            totalCost += item.getPrice();
+            totalCost += item.price;
         }
         totalCostView.setText(getString(R.string.total_cost_prefix) + DF.format(totalCost));
 
@@ -50,23 +49,14 @@ public class CompleteBill extends ActionBarActivity {
                 String itemName = parent.getItemAtPosition(pos).toString().split(" ")[0];
 
                 for (Item item : items) {
-                    if (item.getName().equals(itemName)) {
-                        displayToast(getString(R.string.complete_bill_buyers_prefix) + " " +
-                                Arrays.toString(item.getBuyers()).replace("[", "").replace("]", ""),
-                                Toast.LENGTH_SHORT);
+                    if (item.name.equals(itemName)) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.complete_bill_buyers_prefix) +
+                                        " " + Arrays.toString(item.buyers).replace("[", "").replace("]", ""),
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-    }
-
-    private void initialize() {
-        this.itemListView = (ListView) findViewById(R.id.items);
-        this.totalCostView =(TextView) findViewById(R.id.total_cost);
-    }
-
-    private void displayToast(CharSequence message, int duration) {
-        Toast.makeText(getApplicationContext(), message, duration).show();
     }
 
     @Override

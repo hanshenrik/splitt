@@ -2,13 +2,11 @@ package com.hanshenrik.gronsleth_billdivider;
 
 import java.io.Serializable;
 
-/**
- * Created by hanshenrik on 12/03/15.
- */
+
 public class Item implements Serializable {
-    private final String name;
-    private final double price;
-    private final String[] buyers;
+    public final String name;
+    public final double price;
+    public final String[] buyers;
 
     public Item(String name, double price, String[] buyers) {
         this.name = name;
@@ -16,20 +14,8 @@ public class Item implements Serializable {
         this.buyers = buyers;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String[] getBuyers() {
-        return buyers;
-    }
-
     @Override
     public String toString() {
-        return getName() + " // £" + getPrice();
+        return name + " // £" + price;
     }
 }
